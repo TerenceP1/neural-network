@@ -105,12 +105,12 @@ vector<vector<double>> filterhalf(vector<vector<double>> inp)
 vector<vector<double>> filter(vector<vector<double>> inp, double acc)
 {
     int width = inp[0].size(), height = inp.size();
-    double mVal = 0;
+    double mVal = 255;
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            if (inp[i][j] > mVal)
+            if (inp[i][j] < mVal)
             {
                 mVal = inp[i][j];
             }
@@ -122,7 +122,7 @@ vector<vector<double>> filter(vector<vector<double>> inp, double acc)
         vector<double> tmp(width);
         for (int j = 0; j < width; j++)
         {
-            tmp[j] = inp[i][j] > acc * mVal ? 255 : inp[i][j];
+            tmp[j] = 255-inp[i][j] < acc * (255-mVal) ? 255 : inp[i][j];
         }
         res[i] = tmp;
     }
@@ -161,7 +161,7 @@ int main()
         grey[i] = tmp;
     }*/
     int green[3] = {85, 212, 99};
-    vector<vector<double>> grey = filter(dst(oImg, green), 0.1);
+    vector<vector<double>> grey = filter(dst(oImg, green), 0.9);
     cv::Mat greened(inp);
     for (int i = 0; i < greened.rows; i++)
     {
