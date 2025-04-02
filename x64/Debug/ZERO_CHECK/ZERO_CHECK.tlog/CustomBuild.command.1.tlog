@@ -1,0 +1,10 @@
+^C:\USERS\TEREN\DOCUMENTS\PROGRAMMING\C++\SETSOLVER\CMAKEFILES\BB5308ED346476200C9A40EB4DAF080A\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/teren/Documents/Programming/C++/setsolver -BC:/Users/teren/Documents/Programming/C++/setsolver --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/teren/Documents/Programming/C++/setsolver/setsolver.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
