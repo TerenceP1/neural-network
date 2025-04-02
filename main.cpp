@@ -21,9 +21,9 @@ vector<vector<double>> conv(vector<vector<double>> inp, double mtr[3][3])
                 for (int j = 0; j < 3; j++)
                 {
                     int inc1 = a + i - 1, inc2 = b + j - 1;
-                    if (inc1 >= 0 && inc1 < width)
+                    if (inc1 >= 0 && inc1 < height)
                     {
-                        if (inc2 >= 0 && inc2 < height)
+                        if (inc2 >= 0 && inc2 < width)
                         {
                             out[a][b] += mtr[i][j] * inp[inc1][inc2];
                         }
@@ -56,6 +56,77 @@ vector<vector<double>> sobel(vector<vector<double>> inp)
             res[i][j] = sqrt((cvn1[i][j]) * (cvn1[i][j]) + (cvn2[i][j]) * (cvn2[i][j]));
         }
     }
+    return res;
+}
+
+vector<vector<double>> dst(vector<vector<cv::Vec3b>> img, int color[3])
+{
+    int width = img[0].size(), height = img.size();
+    vector<vector<double>> res(height);
+    for (int i = 0; i < height; i++)
+    {
+        vector<double> tmp(width);
+        for (int j = 0; j < width; j++)
+        {
+            tmp[j] = sqrt((color[0] - img[i][j][0]) * (color[0] - img[i][j][0]) + (color[1] - img[i][j][1]) * (color[1] - img[i][j][1]) + (color[2] - img[i][j][2]) * (color[2] - img[i][j][2]));
+        }
+        res[i] = tmp;
+    }
+    return res;
+}
+
+vector<vector<double>> filterhalf(vector<vector<double>> inp)
+{
+    int width = inp[0].size(), height = inp.size();
+    double mVal = 0;
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            if (inp[i][j] > mVal)
+            {
+                mVal = inp[i][j];
+            }
+        }
+    }
+    auto res = inp;
+    for (int i = 0; i < height; i++)
+    {
+        vector<double> tmp(width);
+        for (int j = 0; j < width; j++)
+        {
+            tmp[j] = inp[i][j] < 0.5 * mVal ? 0 : inp[i][j];
+        }
+        res[i] = tmp;
+    }
+    return res;
+}
+
+vector<vector<double>> filter(vector<vector<double>> inp, double acc)
+{
+    int width = inp[0].size(), height = inp.size();
+    double mVal = 0;
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            if (inp[i][j] > mVal)
+            {
+                mVal = inp[i][j];
+            }
+        }
+    }
+    auto res = inp;
+    for (int i = 0; i < height; i++)
+    {
+        vector<double> tmp(width);
+        for (int j = 0; j < width; j++)
+        {
+            tmp[j] = inp[i][j] < acc * mVal ? 0 : inp[i][j];
+        }
+        res[i] = tmp;
+    }
+    return res;
 }
 
 int main()
@@ -67,16 +138,18 @@ int main()
     cv::Mat inp = cv::imread(flnm);
     vector<vector<cv::Vec3b>> oImg(inp.rows);
     cout << "Image is " << inp.rows << 'x' << inp.cols << endl;
+    cout << "read\n";
     for (int i = 0; i < inp.rows; i++)
     {
         vector<cv::Vec3b> tmp(inp.cols);
         for (int j = 0; j < inp.cols; j++)
         {
-            tmp = inp.at<cv::Mat3b>(i, j);
+            tmp[j] = inp.at<cv::Vec3b>(i, j);
         }
         oImg[i] = tmp;
     }
     // greyscale
+    /*cout << "grey\n";
     vector<vector<double>> grey(inp.rows);
     for (int i = 0; i < inp.rows; i++)
     {
@@ -86,16 +159,22 @@ int main()
             tmp[j] = 0.299 * oImg[i][j][0] + 0.587 * oImg[i][j][1] + 0.114 * oImg[i][j][2];
         }
         grey[i] = tmp;
-    }
+    }*/
+    int green[3] = {85, 212, 99};
+    vector<vector<double>> grey = filter(dst(oImg, green), 0.9);
+    cout << "colorfied: " << grey[0].size() << 'x' << grey.size() << endl;
+    cout << "sobel\n";
     auto fres = sobel(grey);
+    fres = filterhalf(fres);
     cv::Mat res(inp);
+    cout << "out\n";
     for (int i = 0; i < inp.rows; i++)
     {
         for (int j = 0; j < inp.cols; j++)
         {
-            inp.at<cv::Mat3b>(i, j)[0] = (uchar)min((int)(fres[i][j]), 255);
-            inp.at<cv::Mat3b>(i, j)[1] = (uchar)min((int)(fres[i][j]), 255);
-            inp.at<cv::Mat3b>(i, j)[2] = (uchar)min((int)(fres[i][j]), 255);
+            inp.at<cv::Vec3b>(i, j)[0] = (uchar)min((int)(fres[i][j]), 255);
+            inp.at<cv::Vec3b>(i, j)[1] = (uchar)min((int)(fres[i][j]), 255);
+            inp.at<cv::Vec3b>(i, j)[2] = (uchar)min((int)(fres[i][j]), 255);
         }
     }
     cv::imwrite("out.bmp", res);
