@@ -122,7 +122,7 @@ vector<vector<double>> filter(vector<vector<double>> inp, double acc)
         vector<double> tmp(width);
         for (int j = 0; j < width; j++)
         {
-            tmp[j] = inp[i][j] < acc * mVal ? 0 : inp[i][j];
+            tmp[j] = inp[i][j] > acc * mVal ? 0 : inp[i][j];
         }
         res[i] = tmp;
     }
@@ -161,7 +161,7 @@ int main()
         grey[i] = tmp;
     }*/
     int green[3] = {85, 212, 99};
-    vector<vector<double>> grey = filter(dst(oImg, green), 0.9);
+    vector<vector<double>> grey = filter(dst(oImg, green), 0.1);
     cv::Mat greened(inp);
     for (int i = 0; i < greened.rows; i++)
     {
