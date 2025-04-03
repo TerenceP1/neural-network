@@ -139,8 +139,9 @@ vector<vector<double>> filter(vector<vector<double>> inp, double acc)
 }
 
 int iWidth, iHeight;
-bool isValid(x,y){
-    return (x>=0) && (x<iHeight) && (y>=0) && (y<iWidth);
+bool isValid(int x, int y)
+{
+    return (x >= 0) && (x < iHeight) && (y >= 0) && (y < iWidth);
 }
 
 void test_fill(vector<vector<double>> inp)
@@ -148,21 +149,78 @@ void test_fill(vector<vector<double>> inp)
     // Uses floodfill to find shading
     // inp is sobel edge and filtered
     int width = inp[0].size(), height = inp.size();
-    vector<vector<bool>>visArr(height);
-    for (int i=0;i<height;i++)
+    vector<vector<bool>> visArr(height);
+    for (int i = 0; i < height; i++)
     {
-        vector<bool>tmp(width,false);
-        visArr[i]=tmp;
+        vector<bool> tmp(width, false);
+        visArr[i] = tmp;
     }
     // fill from corner to detect and remove background
     // then, for each unvisited "pocket" in visArr,
-    // use floodfill to find the number of connected reigons 
+    // use floodfill to find the number of connected reigons
     // in the pocket. Then, 1=full, 2=empty, more=partial
 
     // Floodfill from corner:
-    queue<pair<int,int>> fQueue; // queue of places to fill
-    fQueue.push({0,0});
-    
+    queue<pair<int, int>> fQueue; // queue of places to fill
+    fQueue.push({0, 0});
+    iHeight = height, iWidth = width;
+    while (!fQueue.empty())
+    {
+        pair<int, int> current = fQueue.back();
+        fQueue.pop();
+        visArr[current.first][current.second] = true;
+        if (isValid(current.first + 1, current.second))
+        {
+            if (!visArr[current.first + 1][current.second])
+            {
+                if (inp[current.first + 1][current.second] == 0)
+                {
+                    fQueue.push({current.first + 1, current.second});
+                }
+            }
+        }
+        if (isValid(current.first - 1, current.second))
+        {
+            if (!visArr[current.first - 1][current.second])
+            {
+                if (inp[current.first - 1][current.second] == 0)
+                {
+                    fQueue.push({current.first - 1, current.second});
+                }
+            }
+        }
+        if (isValid(current.first, current.second + 1))
+        {
+            if (!visArr[current.first][current.second + 1])
+            {
+                if (inp[current.first][current.second + 1] == 0)
+                {
+                    fQueue.push({current.first, current.second + 1});
+                }
+            }
+        }
+        if (isValid(current.first, current.second - 1))
+        {
+            if (!visArr[current.first][current.second - 1])
+            {
+                if (inp[current.first][current.second - 1] == 0)
+                {
+                    fQueue.push({current.first, current.second - 1});
+                }
+            }
+        }
+    }
+    cv::Mat backg(height, width, CV_8UC(3));
+    for (int i = 0; i < backg.rows; i++)
+    {
+        for (int j = 0; j < backg.cols; j++)
+        {
+            backg.at<cv::Vec3b>(i, j)[0] = (uchar)min((int)(visArr[i][j] * 255), 255);
+            backg.at<cv::Vec3b>(i, j)[1] = (uchar)min((int)(visArr[i][j] * 255), 255);
+            backg.at<cv::Vec3b>(i, j)[2] = (uchar)min((int)(visArr[i][j] * 255), 255);
+        }
+    }
+    imwrite("background.bmp", backg);
 }
 
 int main()
