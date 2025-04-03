@@ -164,9 +164,15 @@ void test_fill(vector<vector<double>> inp)
     queue<pair<int, int>> fQueue; // queue of places to fill
     fQueue.push({0, 0});
     iHeight = height, iWidth = width;
+    int ind = 0;
     while (!fQueue.empty())
     {
-        pair<int, int> current = fQueue.back();
+        ind++;
+        if (ind % 1000 == 0)
+        {
+            // cout << "DEBUG THING: queue length is " << fQueue.size() << ", current element to be popped is {" << fQueue.back().first << ", " << fQueue.back().second << "}\n";
+        }
+        pair<int, int> current = fQueue.front();
         fQueue.pop();
         visArr[current.first][current.second] = true;
         if (isValid(current.first + 1, current.second))
@@ -176,6 +182,8 @@ void test_fill(vector<vector<double>> inp)
                 if (inp[current.first + 1][current.second] == 0)
                 {
                     fQueue.push({current.first + 1, current.second});
+
+                    visArr[current.first + 1][current.second] = true;
                 }
             }
         }
@@ -186,6 +194,7 @@ void test_fill(vector<vector<double>> inp)
                 if (inp[current.first - 1][current.second] == 0)
                 {
                     fQueue.push({current.first - 1, current.second});
+                    visArr[current.first - 1][current.second] = true;
                 }
             }
         }
@@ -196,6 +205,7 @@ void test_fill(vector<vector<double>> inp)
                 if (inp[current.first][current.second + 1] == 0)
                 {
                     fQueue.push({current.first, current.second + 1});
+                    visArr[current.first][current.second + 1] = true;
                 }
             }
         }
@@ -206,6 +216,8 @@ void test_fill(vector<vector<double>> inp)
                 if (inp[current.first][current.second - 1] == 0)
                 {
                     fQueue.push({current.first, current.second - 1});
+
+                    visArr[current.first][current.second - 1] = true;
                 }
             }
         }
@@ -218,6 +230,188 @@ void test_fill(vector<vector<double>> inp)
             backg.at<cv::Vec3b>(i, j)[0] = (uchar)min((int)(visArr[i][j] * 255), 255);
             backg.at<cv::Vec3b>(i, j)[1] = (uchar)min((int)(visArr[i][j] * 255), 255);
             backg.at<cv::Vec3b>(i, j)[2] = (uchar)min((int)(visArr[i][j] * 255), 255);
+        }
+    }
+    for (int k = 0; k < height; k++)
+    {
+        for (int m = 0; m < width; m++)
+        {
+            if (!visArr[k][m])
+            {
+                cout << "Thing at (" << k << ',' << m << ")\n";
+                // floodfill
+                vector<vector<bool>> visArr2(height);
+                for (int i = 0; i < height; i++)
+                {
+                    vector<bool> tmp(width, true);
+                    visArr2[i] = tmp;
+                }
+
+                // look for shapes
+
+                queue<pair<int, int>> fQueue2; // queue of places to fill
+                vector<pair<int, int>> places;
+                fQueue2.push({k, m});
+                iHeight = height, iWidth = width;
+                int ind = 0;
+                cv::Vec3b randclr;
+                randclr[0] = rand() % 256;
+                randclr[1] = rand() % 256;
+                randclr[2] = rand() % 256;
+                while (!fQueue2.empty())
+                {
+                    ind++;
+                    if (ind % 1000 == 0)
+                    {
+                        // cout << "DEBUG THING: queue length is " << fQueue.size() << ", current element to be popped is {" << fQueue.back().first << ", " << fQueue.back().second << "}\n";
+                    }
+                    pair<int, int> current = fQueue2.front();
+                    fQueue2.pop();
+                    backg.at<cv::Vec3b>(current.first, current.second) = randclr;
+                    visArr[current.first][current.second] = true;
+                    visArr2[current.first][current.second] = false;
+                    places.push_back(current);
+                    if (isValid(current.first + 1, current.second))
+                    {
+                        if (!visArr[current.first + 1][current.second])
+                        {
+                            fQueue2.push({current.first + 1, current.second});
+
+                            visArr[current.first + 1][current.second] = true;
+                            visArr2[current.first + 1][current.second] = false;
+                        }
+                    }
+                    if (isValid(current.first - 1, current.second))
+                    {
+                        if (!visArr[current.first - 1][current.second])
+                        {
+                            fQueue2.push({current.first - 1, current.second});
+                            visArr[current.first - 1][current.second] = true;
+                            visArr2[current.first - 1][current.second] = false;
+                        }
+                    }
+                    if (isValid(current.first, current.second + 1))
+                    {
+                        if (!visArr[current.first][current.second + 1])
+                        {
+                            fQueue2.push({current.first, current.second + 1});
+                            visArr[current.first][current.second + 1] = true;
+                            visArr2[current.first][current.second + 1] = false;
+                        }
+                    }
+                    if (isValid(current.first, current.second - 1))
+                    {
+                        if (!visArr[current.first][current.second - 1])
+                        {
+                            fQueue2.push({current.first, current.second - 1});
+
+                            visArr[current.first][current.second - 1] = true;
+                            visArr2[current.first][current.second - 1] = false;
+                        }
+                    }
+                }
+
+                // look for pockets in pockets
+                int npock = 0;
+                for (int a = 0; a < height; a++)
+                {
+                    for (int b = 0; b < width; b++)
+                    {
+                        if (!visArr2[a][b] && (inp[a][b] == 0))
+                        {
+
+                            cout << "Sub-thing at (" << a << ',' << b << ")\n";
+                            npock++;
+                            queue<pair<int, int>> fQueue3; // queue of places to fill
+                            fQueue3.push({a, b});
+                            iHeight = height, iWidth = width;
+                            int ind = 0;
+                            cv::Vec3b subU;
+                            int rAm = (rand() % 5) + 2;
+                            subU[0] = randclr[0] / rAm;
+                            subU[1] = randclr[1] / rAm;
+                            subU[2] = randclr[2] / rAm;
+                            while (!fQueue3.empty())
+                            {
+                                ind++;
+                                if (ind % 1000 == 0)
+                                {
+                                    // cout << "DEBUG THING: queue length is " << fQueue.size() << ", current element to be popped is {" << fQueue.back().first << ", " << fQueue.back().second << "}\n";
+                                }
+                                pair<int, int> current = fQueue3.front();
+                                fQueue3.pop();
+                                visArr2[current.first][current.second] = true;
+                                backg.at<cv::Vec3b>(current.first, current.second) = subU;
+                                if (isValid(current.first + 1, current.second))
+                                {
+                                    if (!visArr2[current.first + 1][current.second])
+                                    {
+                                        if (inp[current.first + 1][current.second] == 0)
+                                        {
+                                            fQueue3.push({current.first + 1, current.second});
+
+                                            visArr2[current.first + 1][current.second] = true;
+                                        }
+                                    }
+                                }
+                                if (isValid(current.first - 1, current.second))
+                                {
+                                    if (!visArr2[current.first - 1][current.second])
+                                    {
+                                        if (inp[current.first - 1][current.second] == 0)
+                                        {
+                                            fQueue3.push({current.first - 1, current.second});
+                                            visArr2[current.first - 1][current.second] = true;
+                                        }
+                                    }
+                                }
+                                if (isValid(current.first, current.second + 1))
+                                {
+                                    if (!visArr2[current.first][current.second + 1])
+                                    {
+                                        if (inp[current.first][current.second + 1] == 0)
+                                        {
+                                            fQueue3.push({current.first, current.second + 1});
+                                            visArr2[current.first][current.second + 1] = true;
+                                        }
+                                    }
+                                }
+                                if (isValid(current.first, current.second - 1))
+                                {
+                                    if (!visArr2[current.first][current.second - 1])
+                                    {
+                                        if (inp[current.first][current.second - 1] == 0)
+                                        {
+                                            fQueue3.push({current.first, current.second - 1});
+
+                                            visArr2[current.first][current.second - 1] = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                cout << "pockets: " << npock << endl;
+                for (pair<int, int> c : places)
+                {
+                    if (npock == 1)
+                    {
+                        backg.at<cv::Vec3b>(c.first, c.second) = {0, 0, 255};
+                        cout << "1 pocket\n";
+                    }
+                    if (npock == 2)
+                    {
+                        backg.at<cv::Vec3b>(c.first, c.second) = {0, 255, 0};
+                        cout << "2 pockets\n";
+                    }
+                    if (npock > 2)
+                    {
+                        backg.at<cv::Vec3b>(c.first, c.second) = {255, 0, 0};
+                        cout << "more pockets\n";
+                    }
+                }
+            }
         }
     }
     imwrite("background.bmp", backg);
@@ -271,6 +465,7 @@ int main()
     cout << "sobel\n";
     auto fres = sobel(grey);
     fres = filterhalf(fres);
+    test_fill(fres);
     cv::Mat res(inp);
     cout << "out\n";
     for (int i = 0; i < inp.rows; i++)
