@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <math.h>
+#include <queue>
 using namespace std;
 
 vector<vector<double>> conv(vector<vector<double>> inp, double mtr[3][3])
@@ -135,6 +136,33 @@ vector<vector<double>> filter(vector<vector<double>> inp, double acc)
         res[i] = tmp;
     }
     return res;
+}
+
+int iWidth, iHeight;
+bool isValid(x,y){
+    return (x>=0) && (x<iHeight) && (y>=0) && (y<iWidth);
+}
+
+void test_fill(vector<vector<double>> inp)
+{
+    // Uses floodfill to find shading
+    // inp is sobel edge and filtered
+    int width = inp[0].size(), height = inp.size();
+    vector<vector<bool>>visArr(height);
+    for (int i=0;i<height;i++)
+    {
+        vector<bool>tmp(width,false);
+        visArr[i]=tmp;
+    }
+    // fill from corner to detect and remove background
+    // then, for each unvisited "pocket" in visArr,
+    // use floodfill to find the number of connected reigons 
+    // in the pocket. Then, 1=full, 2=empty, more=partial
+
+    // Floodfill from corner:
+    queue<pair<int,int>> fQueue; // queue of places to fill
+    fQueue.push({0,0});
+    
 }
 
 int main()
