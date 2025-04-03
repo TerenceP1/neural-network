@@ -27,6 +27,14 @@ vector<vector<double>> conv(vector<vector<double>> inp, double mtr[3][3])
                         {
                             out[a][b] += mtr[i][j] * inp[inc1][inc2];
                         }
+                        else
+                        {
+                            out[a][b] += 255 * mtr[i][j];
+                        }
+                    }
+                    else
+                    {
+                        out[a][b] += 255 * mtr[i][j];
                     }
                 }
             }
@@ -122,7 +130,7 @@ vector<vector<double>> filter(vector<vector<double>> inp, double acc)
         vector<double> tmp(width);
         for (int j = 0; j < width; j++)
         {
-            tmp[j] = 255-inp[i][j] < acc * (255-mVal) ? 255 : inp[i][j];
+            tmp[j] = 255 - inp[i][j] < acc * (255 - mVal) ? 255 : inp[i][j];
         }
         res[i] = tmp;
     }
@@ -161,7 +169,7 @@ int main()
         grey[i] = tmp;
     }*/
     int green[3] = {75, 166, 90};
-    vector<vector<double>> grey = filter(dst(oImg, green), 0.5);
+    vector<vector<double>> grey = filter(dst(oImg, green), 0.7);
     cv::Mat greened(inp);
     for (int i = 0; i < greened.rows; i++)
     {
@@ -172,7 +180,7 @@ int main()
             greened.at<cv::Vec3b>(i, j)[2] = (uchar)min((int)(grey[i][j]), 255);
         }
     }
-    cv::imwrite("greenified.bmp",greened);
+    cv::imwrite("greenified.bmp", greened);
     cout << "colorfied: " << grey[0].size() << 'x' << grey.size() << endl;
     cout << "sobel\n";
     auto fres = sobel(grey);
