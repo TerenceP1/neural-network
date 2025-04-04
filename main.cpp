@@ -458,7 +458,7 @@ int main()
         }
         grey[i] = tmp;
     }*/
-    int green[3] = {75, 166, 90};
+    int green[3] = {56, 56, 215};
     vector<vector<double>> grey = filter(dst(oImg, green), 0.7);
     cv::Mat greened(inp);
     for (int i = 0; i < greened.rows; i++)
