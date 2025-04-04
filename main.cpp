@@ -398,17 +398,17 @@ void test_fill(vector<vector<double>> inp)
                     if (npock == 1)
                     {
                         backg.at<cv::Vec3b>(c.first, c.second) = {0, 0, 255};
-                        cout << "1 pocket\n";
+                        // cout << "1 pocket\n";
                     }
                     if (npock == 2)
                     {
                         backg.at<cv::Vec3b>(c.first, c.second) = {0, 255, 0};
-                        cout << "2 pockets\n";
+                        // cout << "2 pockets\n";
                     }
                     if (npock > 2)
                     {
                         backg.at<cv::Vec3b>(c.first, c.second) = {255, 0, 0};
-                        cout << "more pockets\n";
+                        // cout << "more pockets\n";
                     }
                 }
             }
@@ -419,6 +419,16 @@ void test_fill(vector<vector<double>> inp)
 
 int main()
 {
+    rand();
+    rand();
+    rand();
+    rand();
+    rand();
+    rand();
+    rand();
+    rand();
+    rand();
+    rand();
     cout << "Beginning..." << endl;
     ifstream file("file.txt");
     string flnm;
