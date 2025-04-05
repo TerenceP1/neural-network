@@ -150,7 +150,7 @@ inline double huRaw(int x, int y)
     {
         for (int j = 0; j < width; j++)
         {
-            res += pow(i, x) * pow(j, y) * huImg[i][j];
+            res += (double)(pow(i, x) * pow(j, y)) * huImg[i][j];
         }
     }
     return res;
@@ -175,7 +175,7 @@ inline double huCtMmt(int x, int y)
     {
         for (int j = 0; j < width; j++)
         {
-            res += pow(i, x) * pow(j, y) * huImg[i][j];
+            res += (double)(pow(i - ctX, x)) * (double)(pow(j - ctY, y)) * huImg[i][j];
         }
     }
     return res;
