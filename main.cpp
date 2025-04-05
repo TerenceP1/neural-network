@@ -219,7 +219,7 @@ bool isValid(int x, int y)
     return (x >= 0) && (x < iHeight) && (y >= 0) && (y < iWidth);
 }
 
-void test_fill(vector<vector<double>> inp)
+void test_fill(vector<vector<double>> inp, char* file)
 {
     // Uses floodfill to find shading
     // inp is sobel edge and filtered
@@ -489,7 +489,7 @@ void test_fill(vector<vector<double>> inp)
             }
         }
     }
-    imwrite("background.bmp", backg);
+    imwrite(file, backg);
 }
 
 int main()
@@ -533,33 +533,44 @@ int main()
         }
         grey[i] = tmp;
     }*/
-    int green[3] = {143, 54, 91};
-    vector<vector<double>> grey = filter(dst(oImg, green), 0.7);
+    int red[3]={56,56,215};
+    int green[3]={90,166,75};
+    int purple[3] = {143, 54, 91};
+    
+    vector<vector<double>> greyR = filter(dst(oImg, red), 0.7);
+    vector<vector<double>> greyG = filter(dst(oImg, green), 0.7);
+    vector<vector<double>> greyP = filter(dst(oImg, purple), 0.7);
     cv::Mat greened(inp);
     for (int i = 0; i < greened.rows; i++)
     {
         for (int j = 0; j < greened.cols; j++)
         {
-            greened.at<cv::Vec3b>(i, j)[0] = (uchar)min((int)(grey[i][j]), 255);
-            greened.at<cv::Vec3b>(i, j)[1] = (uchar)min((int)(grey[i][j]), 255);
-            greened.at<cv::Vec3b>(i, j)[2] = (uchar)min((int)(grey[i][j]), 255);
+            greened.at<cv::Vec3b>(i, j)[0] = (uchar)min((int)(greyG[i][j]), 255);
+            greened.at<cv::Vec3b>(i, j)[1] = (uchar)min((int)(greyG[i][j]), 255);
+            greened.at<cv::Vec3b>(i, j)[2] = (uchar)min((int)(greyG[i][j]), 255);
         }
     }
     cv::imwrite("greenified.bmp", greened);
-    cout << "colorfied: " << grey[0].size() << 'x' << grey.size() << endl;
+    cout << "colorfied: " << greyG[0].size() << 'x' << greyG.size() << endl;
     cout << "sobel\n";
-    auto fres = sobel(grey);
-    fres = filterhalf(fres);
-    test_fill(fres);
+    auto fresR = sobel(greyR);
+    auto fresG = sobel(greyG);
+    auto fresP = sobel(greyP);
+    fresR = filterhalf(fresR);
+    fresG = filterhalf(fresG);
+    fresP = filterhalf(fresP);
+    test_fill(fresR,"red.bmp");
+    test_fill(fresG,"green.bmp");
+    test_fill(fresP,"purple.bmp");
     cv::Mat res(inp);
     cout << "out\n";
     for (int i = 0; i < inp.rows; i++)
     {
         for (int j = 0; j < inp.cols; j++)
         {
-            inp.at<cv::Vec3b>(i, j)[0] = (uchar)min((int)(fres[i][j]), 255);
-            inp.at<cv::Vec3b>(i, j)[1] = (uchar)min((int)(fres[i][j]), 255);
-            inp.at<cv::Vec3b>(i, j)[2] = (uchar)min((int)(fres[i][j]), 255);
+            inp.at<cv::Vec3b>(i, j)[0] = (uchar)min((int)(fresG[i][j]), 255);
+            inp.at<cv::Vec3b>(i, j)[1] = (uchar)min((int)(fresG[i][j]), 255);
+            inp.at<cv::Vec3b>(i, j)[2] = (uchar)min((int)(fresG[i][j]), 255);
         }
     }
     cv::imwrite("out.bmp", res);
