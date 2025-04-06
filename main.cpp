@@ -533,9 +533,9 @@ int main()
         }
         grey[i] = tmp;
     }*/
-    int red[3]={56,56,215};
-    int green[3]={90,166,75};
-    int purple[3] = {143, 54, 91};
+    int red[3]={135,51,234};
+    int green[3]={108,214,121};
+    int purple[3] = {218, 160, 162};
     
     vector<vector<double>> greyR = filter(dst(oImg, red), 0.7);
     vector<vector<double>> greyG = filter(dst(oImg, green), 0.7);
