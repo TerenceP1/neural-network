@@ -219,6 +219,39 @@ bool isValid(int x, int y)
     return (x >= 0) && (x < iHeight) && (y >= 0) && (y < iWidth);
 }
 
+double huOval[2];
+double huRhombus[2];
+double huSquiggle[2];
+
+void huFetch(){
+    cv::Mat oval=cv::imread("shapes/oval.jpg"),
+    rhombus=cv::imread("shapes/rhombus.jpg"),
+    squiggle=cv::imread("shapes/squiggle.jpg");
+    vector<vector<cv::Vec3b>> cOval(oval.height);
+    for (int i = 0; i < oval.rows; i++)
+    {
+        vector<cv::Vec3b> tmp(oval.cols);
+        for (int j = 0; j < oval.cols; j++)
+        {
+            tmp[j] = inp.at<cv::Vec3b>(i, j);
+        }
+        cOval[i] = tmp;
+    }
+    vector<vector<double>> bOval(oval.height);
+    for (int i = 0; i < oval.rows; i++)
+    {
+        vector<double> tmp(oval.cols);
+        for (int j = 0; j < oval.cols; j++)
+        {
+            tmp[j] = 255-cOval[i][j][0];
+        }
+        bOval[i] = tmp;
+    }
+    huMoment(bOval);
+    cout<<"Oval Hu moment: "<<huRes[0]<<", "<<huRes[1]<<endl;
+    
+}
+
 void test_fill(vector<vector<double>> inp, char* file)
 {
     // Uses floodfill to find shading
@@ -536,7 +569,7 @@ int main()
     int red[3]={135,51,234};
     int green[3]={108,214,121};
     int purple[3] = {218, 160, 162};
-    
+    huFetch();
     vector<vector<double>> greyR = filter(dst(oImg, red), 0.7);
     vector<vector<double>> greyG = filter(dst(oImg, green), 0.7);
     vector<vector<double>> greyP = filter(dst(oImg, purple), 0.7);
