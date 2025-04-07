@@ -233,7 +233,7 @@ void huFetch(){
         vector<cv::Vec3b> tmp(oval.cols);
         for (int j = 0; j < oval.cols; j++)
         {
-            tmp[j] = inp.at<cv::Vec3b>(i, j);
+            tmp[j] = oval.at<cv::Vec3b>(i, j);
         }
         cOval[i] = tmp;
     }
