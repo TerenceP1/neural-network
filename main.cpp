@@ -188,7 +188,7 @@ inline void huNormCtmmt(int x, int y)
 }
 
 double huRes[7]; // Output
-inline double huMoment(vector<vector<double>> inp)
+inline void huMoment(vector<vector<double>> inp)
 {
     huImg = inp;
     huCent();
