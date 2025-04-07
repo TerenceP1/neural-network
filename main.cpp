@@ -227,7 +227,7 @@ void huFetch(){
     cv::Mat oval=cv::imread("shapes/oval.jpg"),
     rhombus=cv::imread("shapes/rhombus.jpg"),
     squiggle=cv::imread("shapes/squiggle.jpg");
-    vector<vector<cv::Vec3b>> cOval(oval.height);
+    vector<vector<cv::Vec3b>> cOval(oval.rows);
     for (int i = 0; i < oval.rows; i++)
     {
         vector<cv::Vec3b> tmp(oval.cols);
@@ -237,7 +237,7 @@ void huFetch(){
         }
         cOval[i] = tmp;
     }
-    vector<vector<double>> bOval(oval.height);
+    vector<vector<double>> bOval(oval.rows);
     for (int i = 0; i < oval.rows; i++)
     {
         vector<double> tmp(oval.cols);
