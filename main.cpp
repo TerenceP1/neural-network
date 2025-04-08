@@ -248,7 +248,7 @@ void huFetch(){
         bOval[i] = tmp;
     }
     huMoment(bOval);
-    cout<<"Oval Hu moment: "<<huRes[0]<<", "<<huRes[1]<<endl;
+    cout<<"Oval Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<endl;
     vector<vector<cv::Vec3b>> cSquiggle(squiggle.rows);
     for (int i = 0; i < squiggle.rows; i++)
     {
@@ -270,7 +270,7 @@ void huFetch(){
         bSquiggle[i] = tmp;
     }
     huMoment(bSquiggle);
-    cout<<"Squiggle Hu moment: "<<huRes[0]<<", "<<huRes[1]<<endl;
+    cout<<"Squiggle Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<endl;
     
 }
 
