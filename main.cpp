@@ -259,7 +259,7 @@ void huFetch(){
         }
         cSquiggle[i] = tmp;
     }
-    vector<vector<double>> bSquiggle(oval.rows);
+    vector<vector<double>> bSquiggle(squiggle.rows);
     for (int i = 0; i < squiggle.rows; i++)
     {
         vector<double> tmp(squiggle.cols);
