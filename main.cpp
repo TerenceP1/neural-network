@@ -271,6 +271,28 @@ void huFetch(){
     }
     huMoment(bSquiggle);
     cout<<"Squiggle Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<endl;
+    vector<vector<cv::Vec3b>> cRhombus(rhombus.rows);
+    for (int i = 0; i < rhombus.rows; i++)
+    {
+        vector<cv::Vec3b> tmp(rhombus.cols);
+        for (int j = 0; j < rhombus.cols; j++)
+        {
+            tmp[j] = rhombus.at<cv::Vec3b>(i, j);
+        }
+        cRhombus[i] = tmp;
+    }
+    vector<vector<double>> bRhombus(rhombus.rows);
+    for (int i = 0; i < rhombus.rows; i++)
+    {
+        vector<double> tmp(rhombus.cols);
+        for (int j = 0; j < rhombus.cols; j++)
+        {
+            tmp[j] = 255-cRhombus[i][j][0];
+        }
+        bRhombus[i] = tmp;
+    }
+    huMoment(bRhombus);
+    cout<<"Rhombus Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<endl;
     
 }
 
