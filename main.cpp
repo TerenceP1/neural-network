@@ -248,6 +248,8 @@ void huFetch(){
         bOval[i] = tmp;
     }
     huMoment(bOval);
+    huOval[0]=log10(huRes[0]);
+    huOval[1]=log10(huRes[1]);
     cout<<"Oval Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<log10(huRes[2])<<endl;
     vector<vector<cv::Vec3b>> cSquiggle(squiggle.rows);
     for (int i = 0; i < squiggle.rows; i++)
@@ -270,6 +272,8 @@ void huFetch(){
         bSquiggle[i] = tmp;
     }
     huMoment(bSquiggle);
+    huSquiggle[0]=log10(huRes[0]);
+    huSquiggle[1]=log10(huRes[1]);
     cout<<"Squiggle Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<", "<<log10(huRes[2])<<endl;
     vector<vector<cv::Vec3b>> cRhombus(rhombus.rows);
     for (int i = 0; i < rhombus.rows; i++)
@@ -292,6 +296,8 @@ void huFetch(){
         bRhombus[i] = tmp;
     }
     huMoment(bRhombus);
+    huRhombus[0]=log10(huRes[0]);
+    huRhombus[1]=log10(huRes[1]);
     cout<<"Rhombus Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<log10(huRes[2])<<endl;
     
 }
