@@ -469,6 +469,16 @@ void test_fill(vector<vector<double>> inp, char* file)
                     }
                 }
 
+                vector<vector<double>> huIn(height);
+                for (ibt i=0;i<height;i+){
+                    vector<double>tmp(width);
+                    for (int j=0;j<width;j++){
+                        tmp[j]=255-255*visArr[i][j];
+                    }
+                    huIn[i]=tmp;
+                }
+                huMoment(huIn);
+
                 // look for pockets in pockets
                 int npock = 0;
                 for (int a = 0; a < height; a++)
