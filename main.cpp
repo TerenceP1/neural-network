@@ -585,6 +585,20 @@ void test_fill(vector<vector<double>> inp, char* file)
                         backg.at<cv::Vec3b>(c.first, c.second) = {255, 0, 0};
                         // cout << "more pockets\n";
                     }
+                    switch (shape){
+                        case 0:
+                        backg.at<cv::Vec3b>(c.first, c.second)[0]/=2;
+                        backg.at<cv::Vec3b>(c.first, c.second)[1]/=2;
+                        backg.at<cv::Vec3b>(c.first, c.second)[2]/=2;
+                        break;
+                        case 1:
+                        break;
+                        case 2:
+                        backg.at<cv::Vec3b>(c.first, c.second)[0]=min(255,backg.at<cv::Vec3b>(c.first, c.second)[0]+128);
+                        backg.at<cv::Vec3b>(c.first, c.second)[1]=min(255,backg.at<cv::Vec3b>(c.first, c.second)[1]+128);
+                        backg.at<cv::Vec3b>(c.first, c.second)[2]=min(255,backg.at<cv::Vec3b>(c.first, c.second)[2]+128);
+                        break;
+                    }
                 }
             }
         }
