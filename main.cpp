@@ -598,6 +598,8 @@ void test_fill(vector<vector<double>> inp, char* file)
                         backg.at<cv::Vec3b>(c.first, c.second)[1]=min(255,backg.at<cv::Vec3b>(c.first, c.second)[1]+128);
                         backg.at<cv::Vec3b>(c.first, c.second)[2]=min(255,backg.at<cv::Vec3b>(c.first, c.second)[2]+128);
                         break;
+                        default:
+                        cout<<"Oh no... (shape error at line 602)"<<endl;
                     }
                 }
             }
