@@ -600,6 +600,7 @@ void test_fill(vector<vector<double>> inp, char* file)
                         break;
                         default:
                         cout<<"Oh no... (shape error at line 602)"<<endl;
+                        break;
                     }
                 }
             }
