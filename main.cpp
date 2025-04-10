@@ -211,6 +211,9 @@ inline void huMoment(vector<vector<double>> inp)
                    (huTable[2][1] + huTable[1][3]) *
                    (3 * (huTable[3][0] + huTable[1][2]) * (huTable[3][0] + huTable[1][2]) -
                     (huTable[2][1] + huTable[0][3]));
+    huRes[0]=-copysign(1.0,huRes[0])*log10(abs(huRes[0]));
+    huRes[1]=-copysign(1.0,huRes[1])*log10(abs(huRes[1]));
+    huRes[2]=-copysign(1.0,huRes[2])*log10(abs(huRes[2]));
 }
 
 int iWidth, iHeight;
@@ -248,10 +251,10 @@ void huFetch(){
         bOval[i] = tmp;
     }
     huMoment(bOval);
-    huOval[0]=log10(huRes[0]);
-    huOval[1]=log10(huRes[1]);
-    huOval[2]=log10(huRes[2]);
-    cout<<"Oval Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<", "<<log10(huRes[2])<<endl;
+    huOval[0]=huRes[0];
+    huOval[1]=(huRes[1]);
+    huOval[2]=(huRes[2]);
+    cout<<"Oval Hu moment: "<<(huRes[0])<<", "<<(huRes[1])<<", "<<(huRes[2])<<endl;
     vector<vector<cv::Vec3b>> cSquiggle(squiggle.rows);
     for (int i = 0; i < squiggle.rows; i++)
     {
@@ -273,10 +276,10 @@ void huFetch(){
         bSquiggle[i] = tmp;
     }
     huMoment(bSquiggle);
-    huSquiggle[0]=log10(huRes[0]);
-    huSquiggle[1]=log10(huRes[1]);
-    huSquiggle[2]=log10(huRes[2]);
-    cout<<"Squiggle Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<", "<<log10(huRes[2])<<endl;
+    huSquiggle[0]=(huRes[0]);
+    huSquiggle[1]=(huRes[1]);
+    huSquiggle[2]=(huRes[2]);
+    cout<<"Squiggle Hu moment: "<<(huRes[0])<<", "<<(huRes[1])<<", "<<(huRes[2])<<endl;
     vector<vector<cv::Vec3b>> cRhombus(rhombus.rows);
     for (int i = 0; i < rhombus.rows; i++)
     {
@@ -298,10 +301,10 @@ void huFetch(){
         bRhombus[i] = tmp;
     }
     huMoment(bRhombus);
-    huRhombus[0]=log10(huRes[0]);
-    huRhombus[1]=log10(huRes[1]);
-    huRhombus[2]=log10(huRes[2]);
-    cout<<"Rhombus Hu moment: "<<log10(huRes[0])<<", "<<log10(huRes[1])<<", "<<log10(huRes[2])<<endl;
+    huRhombus[0]=(huRes[0]);
+    huRhombus[1]=(huRes[1]);
+    huRhombus[2]=(huRes[2]);
+    cout<<"Rhombus Hu moment: "<<(huRes[0])<<", "<<(huRes[1])<<", "<<(huRes[2])<<endl;
     
 }
 
@@ -482,9 +485,9 @@ void test_fill(vector<vector<double>> inp, char* file)
                 }
                 huMoment(huIn);
                 cout << "Hu moment of shape: "<<huRes[0]<<", "<<huRes[1]<<endl;
-                double dOv=sqrt(pow(log10(huRes[0])-huOval[0],2)+pow(log10(huRes[1])-huOval[1],2)+pow(log10(huRes[2])-huOval[2],2));
-                double dRh=sqrt(pow(log10(huRes[0])-huRhombus[0],2)+pow(log10(huRes[1])-huRhombus[1],2)+pow(log10(huRes[2])-huRhombus[2],2));
-                double dSq=sqrt(pow(log10(huRes[0])-huSquiggle[0],2)+pow(log10(huRes[1])-huSquiggle[1],2)+pow(log10(huRes[2])-huSquiggle[2],2));
+                double dOv=sqrt(pow((huRes[0])-huOval[0],2)+pow((huRes[1])-huOval[1],2)+pow((huRes[2])-huOval[2],2));
+                double dRh=sqrt(pow((huRes[0])-huRhombus[0],2)+pow((huRes[1])-huRhombus[1],2)+pow((huRes[2])-huRhombus[2],2));
+                double dSq=sqrt(pow((huRes[0])-huSquiggle[0],2)+pow((huRes[1])-huSquiggle[1],2)+pow((huRes[2])-huSquiggle[2],2));
                 int shape=3;
                 if (dOv<dRh && dOv<dSq) shape=0;
                 if (dRh<dOv && dRh<dSq) shape=1;
