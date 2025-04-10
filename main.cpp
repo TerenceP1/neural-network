@@ -479,7 +479,7 @@ void test_fill(vector<vector<double>> inp, char* file)
                 for (int i=0;i<height;i++){
                     vector<double>tmp(width);
                     for (int j=0;j<width;j++){
-                        tmp[j]=255-255*visArr[i][j];
+                        tmp[j]=255-255*visArr2[i][j];
                     }
                     huIn[i]=tmp;
                 }
