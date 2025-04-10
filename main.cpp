@@ -478,13 +478,14 @@ void test_fill(vector<vector<double>> inp, char* file)
                     huIn[i]=tmp;
                 }
                 huMoment(huIn);
+                cout << "Hu moment of shape: "<<huRes[0]<<", "<<huRes[1]<<endl;
                 double dOv=sqrt(pow(log10(huRes[0])-huOval[0],2)+pow(log10(huRes[1])-huOval[1],2));
                 double dRh=sqrt(pow(log10(huRes[0])-huRhombus[0],2)+pow(log10(huRes[1])-huRhombus[1],2));
                 double dSq=sqrt(pow(log10(huRes[0])-huSquiggle[0],2)+pow(log10(huRes[1])-huSquiggle[1],2));
-                int shape;
-                if (dOv>dRh || dOv>dSq) shape=0;
-                if (dRh>dOv || dRh>dSq) shape=1;
-                if (dSq>dOv || dSq>dRh) shape=2;
+                int shape=3;
+                if (dOv<dRh && dOv<dSq) shape=0;
+                if (dRh<dOv && dRh<dSq) shape=1;
+                if (dSq<dOv && dSq<dRh) shape=2;
 
                 // look for pockets in pockets
                 int npock = 0;
