@@ -184,7 +184,7 @@ inline double huCtMmt(int x, int y)
 double huTable[4][4]; // Stores normalized central moments
 inline void huNormCtmmt(int x, int y)
 {
-    huTable[x][y] = huCtMmt(x, y) / pow(huArea, (x + y) / 2 + 1);
+    huTable[x][y] = huCtMmt(x, y) / pow(huArea, (double)(x + y) / 2.0 + 1.0);
 }
 
 double huRes[7]; // Output
@@ -201,7 +201,7 @@ inline void huMoment(vector<vector<double>> inp)
     }
     huRes[0] = huTable[2][0] + huTable[0][2];
     huRes[1] = (huTable[2][0] - huTable[0][2]) * (huTable[2][0] - huTable[0][2]) + 4 * huTable[1][1] * huTable[1][1];
-    huRes[2] = (huTable[3][0] - 3 * huTable[1][2]) * (huTable[3][0] - 3 * huTable[1][2]) + (3 * huTable[2][1] - huTable[0][3]) * (3 * huTable[2][1] - huTable[0][3]);
+    huRes[2] = (huTable[3][0] - 3.0 * huTable[1][2]) * (huTable[3][0] - 3.0 * huTable[1][2]) + (3.0 * huTable[2][1] - huTable[0][3]) * (3.0 * huTable[2][1] - huTable[0][3]);
     huRes[3] = (huTable[3][0] + huTable[1][2]) * (huTable[3][0] + huTable[1][2]) + (huTable[2][1] + huTable[0][3]) * (huTable[2][1] + huTable[0][3]);
     huRes[4] = (huTable[3][0] - 3 * huTable[1][2]) *
                    (huTable[3][0] + huTable[1][2]) *
