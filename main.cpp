@@ -421,6 +421,7 @@ void test_fill(vector<vector<double>> inp, char* file)
                 cv::Vec3b randclr;
                 randclr[0] = rand() % 256;
                 randclr[1] = rand() % 256;
+                int xMin=1000000,xMax=0,yMin=1000000,yMax=0;
                 randclr[2] = rand() % 256;
                 while (!fQueue2.empty())
                 {
@@ -432,6 +433,10 @@ void test_fill(vector<vector<double>> inp, char* file)
                     pair<int, int> current = fQueue2.front();
                     fQueue2.pop();
                     backg.at<cv::Vec3b>(current.first, current.second) = randclr;
+                    if (current.first<xMin) xMin=current.first;
+                    if (current.first>xMax) xMax=current.first;
+                    if (current.second<yMin) yMin=current.second;
+                    if (current.second>yMax) yMax=current.second;
                     visArr[current.first][current.second] = true;
                     visArr2[current.first][current.second] = false;
                     places.push_back(current);
@@ -483,7 +488,15 @@ void test_fill(vector<vector<double>> inp, char* file)
                     }
                     huIn[i]=tmp;
                 }
-                huMoment(huIn);
+                vector<vector<double>> huIn2(xMax-xMin+1);
+                for (int i=0;i<xMax-xMin+1;i++){
+                    vector<double>tmp(yMax-yMin+1);
+                    for (int j=0;j<yMax-yMin+1;j++){
+                        tmp[j]=huIn[i+xMin][j+yMin];
+                    }
+                    huIn2[i]=tmp;
+                }
+                huMoment(huIn2);
                 cout << "Hu moment of shape: "<<huRes[0]<<", "<<huRes[1]<<endl;
                 double dOv=sqrt(pow((huRes[0])-huOval[0],2)+pow((huRes[1])-huOval[1],2)+pow((huRes[2])-huOval[2],2));
                 double dRh=sqrt(pow((huRes[0])-huRhombus[0],2)+pow((huRes[1])-huRhombus[1],2)+pow((huRes[2])-huRhombus[2],2));
