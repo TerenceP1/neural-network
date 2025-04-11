@@ -612,6 +612,7 @@ void test_fill(vector<vector<double>> inp, char* file)
                         break;
                     }
                 }
+                backg.at<cv::Vec3b>((int)ctX,(int)ctY)={0,0,0};
             }
         }
     }
