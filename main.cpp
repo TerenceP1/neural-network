@@ -247,6 +247,7 @@ void huFetch(){
         for (int j = 0; j < oval.cols; j++)
         {
             tmp[j] = 255-cOval[i][j][0];
+            if (tmp[j]<128){tmp[j]=0;}else{tmp[j]=255;}
         }
         bOval[i] = tmp;
     }
@@ -272,6 +273,7 @@ void huFetch(){
         for (int j = 0; j < squiggle.cols; j++)
         {
             tmp[j] = 255-cSquiggle[i][j][0];
+            if (tmp[j]<128){tmp[j]=0;}else{tmp[j]=255;}
         }
         bSquiggle[i] = tmp;
     }
@@ -297,6 +299,7 @@ void huFetch(){
         for (int j = 0; j < rhombus.cols; j++)
         {
             tmp[j] = 255-cRhombus[i][j][0];
+            if (tmp[j]<128){tmp[j]=0;}else{tmp[j]=255;}
         }
         bRhombus[i] = tmp;
     }
