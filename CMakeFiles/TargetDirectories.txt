@@ -1,3 +1,0 @@
-C:/Users/teren/Documents/Programming/C++/setsolver/CMakeFiles/setsolver.dir
-C:/Users/teren/Documents/Programming/C++/setsolver/CMakeFiles/ALL_BUILD.dir
-C:/Users/teren/Documents/Programming/C++/setsolver/CMakeFiles/ZERO_CHECK.dir
