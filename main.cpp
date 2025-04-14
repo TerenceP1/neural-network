@@ -11,7 +11,7 @@ using namespace std;
 int main()
 {
     // xor problem test
-    ml::device dev(true);
-    ml::device de2(false);
+    ml::Device dev(true);
+    ml::Device de2(false);
     return 0;
 }

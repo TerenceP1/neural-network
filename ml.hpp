@@ -35,22 +35,22 @@ namespace ml
             break;
         }
     }
-    class device
+    class Device
     {
     private:
         bool isGpu;
         cl_platform_id platform;
-        cl_device_id device2;
+        cl_device_id device;
 
     public:
-        device(bool gpu)
+        Device(bool gpu)
         {
             isGpu = gpu;
             if (gpu)
             {
                 log(0, "Using GPU");
                 clGetPlatformIDs(1, &platform, nullptr);
-                clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device2, nullptr);
+                clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, nullptr);
                 char *name; // CL_DEVICE_NAME
                 size_t len;
                 char *vendor; // CL_DEVICE_VENDOR
@@ -116,7 +116,7 @@ namespace ml
                 log(1, "GPU is preffered, please switch if possible");
             }
         }
-        ~device()
+        ~Device()
         {
             log(0, "Cleaning up resources from ml::device...");
         }
