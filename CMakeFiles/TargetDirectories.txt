@@ -1,0 +1,3 @@
+C:/Users/teren/Documents/Programming/AI_stuff/netGitH/CMakeFiles/ml.dir
+C:/Users/teren/Documents/Programming/AI_stuff/netGitH/CMakeFiles/ALL_BUILD.dir
+C:/Users/teren/Documents/Programming/AI_stuff/netGitH/CMakeFiles/ZERO_CHECK.dir

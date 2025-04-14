@@ -16,8 +16,8 @@ cmake --build .
 echo error level %ERRORLEVEL%
 if "%ERRORLEVEL%"=="0" (
     echo copy
-    xcopy debug\setsolver.exe .\ /q /y
+    xcopy debug\ml.exe .\ /q /y
     echo running code
-    setsolver
+    ml
     echo exit code %ERRORLEVEL%
 ) else echo FAILED!!!
