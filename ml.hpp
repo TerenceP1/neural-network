@@ -41,6 +41,12 @@ namespace ml
         bool isGpu;
         cl_platform_id platform;
         cl_device_id device;
+        struct func
+        {
+            string ker;
+            float (*cpuF)(float in);
+        };
+        map<string, pair<func, func>> activations; // {activation function name, {code to activation function,code to derivative of activation function}}
 
     public:
         Device(bool gpu)

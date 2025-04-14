@@ -12,6 +12,5 @@ int main()
 {
     // xor problem test
     ml::Device dev(true);
-    ml::Device de2(false);
     return 0;
 }
