@@ -12,5 +12,10 @@ int main()
 {
     // xor problem test
     ml::Device dev(true);
+    ml::Device::func relu, drelu;
+    relu.ker = "out=inp>0?inp:0.01*inp;";
+    drelu.ker = "out=inp>0?1:0.01;";
+    dev.setFunc("relu", relu, drelu);
+    dev.compile();
     return 0;
 }

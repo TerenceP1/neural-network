@@ -30,6 +30,9 @@ namespace ml
         case 2:
             cout << "[ERROR " << ctm << "] " << inp << endl;
             break;
+        case 3:
+            cout << "[DEBUG " << ctm << "] " << inp << endl;
+            break;
         default:
             log(2, "Function ml::log called with invalid errorlevel");
             break;
@@ -37,16 +40,22 @@ namespace ml
     }
     class Device
     {
-    private:
-        bool isGpu;
-        cl_platform_id platform;
-        cl_device_id device;
+    public:
         struct func
         {
             string ker;
             float (*cpuF)(float in);
         };
+
+    private:
+        bool isGpu;
+        cl_platform_id platform;
+        cl_device_id device;
         map<string, pair<func, func>> activations; // {activation function name, {code to activation function,code to derivative of activation function}}
+        bool compiled = false;
+        cl_context context;
+        cl_program program;
+        cl_command_queue queue2;
 
     public:
         Device(bool gpu)
@@ -125,6 +134,81 @@ namespace ml
         ~Device()
         {
             log(0, "Cleaning up resources from ml::device...");
+            if (compiled)
+            {
+                log(0, "Releasing program, queue, and context...");
+                clReleaseProgram(program);
+                clReleaseCommandQueue(queue2);
+                clReleaseContext(context);
+            }
+        }
+        void setFunc(string name, func fc, func dFc)
+        {
+            if (compiled)
+            {
+                log(2, "Device::setFunc called after compilation");
+                log(2, "Terminating...");
+                exit(1);
+            }
+            if (activations.find(name) == activations.end())
+            {
+                activations.insert({name, {fc, dFc}});
+            }
+            else
+            {
+                activations[name] = {fc, dFc};
+            }
+        }
+        void compile()
+        {
+            if (!isGpu)
+            {
+                log(2, "Device::compile called with CPU mode set");
+                exit(1);
+            }
+            log(0, "Generating code...");
+            string code;
+            for (pair<string, pair<func, func>> i : activations)
+            {
+                // Paremeter der is derivative or not
+                code += "__kernel void " + i.first + "(__global float *a, __global float *b,int der)\n{\n    // This function is auto generated\n    int ind=get_global_id(0);\n    float inp=a[ind];\n    float out;\n    if(der){\n        " + i.second.second.ker + "\n    }\n    else\n    {\n        " + i.second.first.ker + "\n    }\n    b[ind]=out;\n}\n";
+            }
+            log(0, "Code:");
+            log(0, code);
+            log(0, "Compiling code...");
+            const char *prg = code.c_str();
+            const size_t len2 = code.length();
+            program = clCreateProgramWithSource(
+                context,
+                1,
+                &prg,
+                &len2,
+                NULL);
+            log(2, "Program made...");
+            cl_int err = clBuildProgram(
+                program,
+                1,
+                &device,
+                NULL,
+                NULL,
+                NULL);
+            log(0, "Compiled");
+            string errC = to_string(err);
+            log(0, "Compilation result:");
+            size_t logL;
+            clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &logL);
+            char *blog = new char[logL];
+            clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, logL, blog, NULL);
+            log(0, blog);
+            if (err != CL_SUCCESS)
+            {
+                log(2, "Compilation failed with error code " + errC);
+                exit(err);
+            }
+            else
+            {
+                log(0, "Compilation success");
+            }
         }
     };
 }
