@@ -18,6 +18,6 @@ if "%ERRORLEVEL%"=="0" (
     echo copy
     xcopy debug\ml.exe .\ /q /y
     echo running code
-    ml
-    echo exit code %ERRORLEVEL%
+    ml.exe
 ) else echo FAILED!!!
+echo exit code %errorlevel%

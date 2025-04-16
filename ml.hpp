@@ -176,6 +176,18 @@ namespace ml
             log(0, "Code:");
             log(0, code);
             log(0, "Compiling code...");
+            context = clCreateContext(
+                NULL,
+                1,
+                &device,
+                NULL,
+                NULL,
+                NULL);
+            queue2 = clCreateCommandQueueWithProperties(
+                context,
+                device,
+                NULL,
+                NULL);
             const char *prg = code.c_str();
             const size_t len2 = code.length();
             program = clCreateProgramWithSource(
