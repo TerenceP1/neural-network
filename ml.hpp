@@ -84,21 +84,23 @@ namespace ml
                     name,
                     NULL);
                 string nstr(name, len);
+                delete[] name;
                 log(0, "OpenCL GPU name: " + nstr);
                 clGetDeviceInfo(
                     device,
-                    CL_DEVICE_NAME,
+                    CL_DEVICE_VENDOR,
                     NULL,
                     NULL,
                     &len);
                 vendor = new char[len];
                 clGetDeviceInfo(
                     device,
-                    CL_DEVICE_NAME,
+                    CL_DEVICE_VENDOR,
                     len,
                     vendor,
                     NULL);
                 string nstr2(vendor, len);
+                delete[] vendor;
                 log(0, "OpenCL GPU vendor: " + nstr2);
                 char *version;
                 clGetDeviceInfo(
@@ -115,6 +117,7 @@ namespace ml
                     version,
                     NULL);
                 string nstr3(version, len);
+                delete[] version;
                 log(0, "OpenCL supported version: " + nstr3);
                 cl_uint max_dims;
                 clGetDeviceInfo(
@@ -128,7 +131,7 @@ namespace ml
             else
             {
                 log(0, "No GPU was asked");
-                log(1, "GPU is preffered, please switch if possible");
+                log(1, "GPU is prefered, please switch if possible");
             }
         }
         ~Device()
@@ -166,12 +169,17 @@ namespace ml
                 log(2, "Device::compile called with CPU mode set");
                 exit(1);
             }
+            if (compiled)
+            {
+                log(2, "Device::compile called twice");
+                exit(1);
+            }
             log(0, "Generating code...");
             string code;
             for (pair<string, pair<func, func>> i : activations)
             {
                 // Paremeter der is derivative or not
-                code += "__kernel void " + i.first + "(__global float *a, __global float *b,int der)\n{\n    // This function is auto generated\n    int ind=get_global_id(0);\n    float inp=a[ind];\n    float out;\n    if(der){\n        " + i.second.second.ker + "\n    }\n    else\n    {\n        " + i.second.first.ker + "\n    }\n    b[ind]=out;\n}\n";
+                code += "__kernel void " + i.first + "(__global float *a, __global float *b,int der)\n{\n    // This function is auto generated\n    int ind=get_global_id(0);\n    float inp=a[ind];\n    float out;\n    if(der){\n        " + i.second.second.ker + "\n    }\n    else\n    {\n        " + i.second.first.ker + "\n    }\n    b[ind]=out;\n}\n\n";
             }
             log(0, "Code:");
             log(0, code);
@@ -196,7 +204,7 @@ namespace ml
                 &prg,
                 &len2,
                 NULL);
-            log(2, "Program made...");
+            log(3, "Program made...");
             cl_int err = clBuildProgram(
                 program,
                 1,
@@ -221,6 +229,8 @@ namespace ml
             {
                 log(0, "Compilation success");
             }
+            delete[] blog;
+            compiled = true;
         }
     };
 }
