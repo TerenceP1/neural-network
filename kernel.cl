@@ -6,7 +6,7 @@ __kernel void add(__global float *a, __global float *b, __global float *c)
     c[ind]=a[ind]+b[ind];
 }
 
-__kernel void sub(__global float *a, __global float *b, __global float *c)
+__kernel void diff(__global float *a, __global float *b, __global float *c)
 {
     int ind=get_global_id(0);
     c[ind]=a[ind]-b[ind];
