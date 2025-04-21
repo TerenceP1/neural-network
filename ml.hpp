@@ -263,7 +263,6 @@ namespace ml
     public:
         Matrix(Device& dv,int r, int c, bool gpuLoad)
         {
-            // incomplete
             rows=r;
             cols=c;
             if (dv.isGpu)
@@ -279,10 +278,25 @@ namespace ml
                 queue2=dv.queue2;
                 activations=dv.activations;
             }
+            else
+            {
+                if (gpuLoad)
+                {
+                    log(2,"Matrix can't GPU load when in CPU mode");
+                    exit(1);
+                }
+            }
             if (gpuLoad)
             {
                 clLoad=true;
                 cpuLoad=false;
+                clBuf=clCreateBuffer(context,CL_MEM_READ_WRITE,sizeof(float)*r*c,NULL,NULL);
+            }
+            else
+            {
+                clLoad=false;
+                cpuLoad=true;
+                buf=new float[r*c];
             }
         }
     };
