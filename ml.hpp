@@ -38,6 +38,7 @@ namespace ml
             break;
         }
     }
+    class Matrix;
     class Device
     {
     public:
@@ -46,7 +47,7 @@ namespace ml
             string ker;
             float (*cpuF)(float in);
         };
-
+    friend class Matrix;
     private:
         bool isGpu;
         cl_platform_id platform;
@@ -232,5 +233,15 @@ namespace ml
             delete[] blog;
             compiled = true;
         }
+    };
+    class Matrix
+    {
+    private:
+        int rows, cols;
+        cl_mem clBuf;
+        bool clLoad; // true if clBuf is valid
+        bool isGpu;
+        float *buf;
+        bool cpuLoad; // true if buf is valid
     };
 }
