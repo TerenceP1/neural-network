@@ -252,12 +252,26 @@ namespace ml
     public:
         Matrix(Device& dv,int r, int c, bool gpuLoad)
         {
+            // incomplete
+            rows=r;
+            cols=c;
             if (dv.isGpu)
             {
                 if (!dv.compiled)
                 {
                     dv.compile();
                 }
+                platform=dv.platform;
+                device=dv.device;
+                context=dv.context;
+                program=dv.program;
+                queue2=dv.queue2;
+                activations=dv.activations;
+            }
+            if (gpuLoad)
+            {
+                clLoad=true;
+                cpuLoad=false;
             }
         }
     };
