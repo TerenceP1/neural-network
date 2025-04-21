@@ -245,6 +245,12 @@ namespace ml
     };
     class Matrix
     {
+    public:
+        struct func
+        {
+            string ker;
+            float (*cpuF)(float in);
+        };
     private:
         int rows, cols;
         cl_mem clBuf;
