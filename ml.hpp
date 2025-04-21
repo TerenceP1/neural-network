@@ -7,6 +7,8 @@
 #include <time.h>
 #include <string>
 #include <map>
+#include <fstream>
+#include <sstream>
 using namespace std;
 namespace ml
 {
@@ -37,6 +39,13 @@ namespace ml
             log(2, "Function ml::log called with invalid errorlevel");
             break;
         }
+    }
+    string slurp(string nm)
+    {
+        ifstream in(nm);
+        stringstream a;
+        a << in.rdbuf();
+        return a.str();
     }
     class Matrix;
     class Device
@@ -176,7 +185,7 @@ namespace ml
                 exit(1);
             }
             log(0, "Generating code...");
-            string code;
+            string code=slurp("kernel.cl");
             for (pair<string, pair<func, func>> i : activations)
             {
                 // Paremeter der is derivative or not
