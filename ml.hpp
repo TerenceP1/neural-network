@@ -246,7 +246,7 @@ namespace ml
     class Matrix
     {
     public:
-        typedef func Device::func;
+        typedef Device::func func;
     private:
         int rows, cols;
         cl_mem clBuf;
