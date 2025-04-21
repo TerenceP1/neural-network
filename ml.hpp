@@ -243,5 +243,22 @@ namespace ml
         bool isGpu;
         float *buf;
         bool cpuLoad; // true if buf is valid
+        cl_platform_id platform;
+        cl_device_id device;
+        map<string, pair<func, func>> activations; // {activation function name, {code to activation function,code to derivative of activation function}}
+        cl_context context;
+        cl_program program;
+        cl_command_queue queue2;
+    public:
+        Matrix(Device& dv,int r, int c, bool gpuLoad)
+        {
+            if (dv.isGpu)
+            {
+                if (!dv.compiled)
+                {
+                    dv.compile();
+                }
+            }
+        }
     };
 }
