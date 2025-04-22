@@ -301,5 +301,11 @@ namespace ml
                 buf=new float[r*c];
             }
         }
+
+        ~Matrix()
+        {
+            if (clLoad) clReleaseMemObject(clBuf);
+            if (cpuLoad) delete[] buf;
+        }
     };
 }
