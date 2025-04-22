@@ -68,6 +68,7 @@ namespace ml
         cl_command_queue queue2;
 
     public:
+        
         Device(bool gpu)
         {
             isGpu = gpu;
@@ -261,6 +262,8 @@ namespace ml
         cl_program program;
         cl_command_queue queue2;
     public:
+        Matrix(){}
+
         Matrix(Device& dv,int r, int c, bool gpuLoad)
         {
             isGpu=dv.isGpu;
@@ -306,6 +309,12 @@ namespace ml
         {
             if (clLoad) clReleaseMemObject(clBuf);
             if (cpuLoad) delete[] buf;
+        }
+
+        void operator=(Matrix& mtr)
+        {
+            rows=mtr.rows;
+            cols=mtr.cols;
         }
     };
 }
