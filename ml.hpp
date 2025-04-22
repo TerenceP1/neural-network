@@ -263,6 +263,7 @@ namespace ml
     public:
         Matrix(Device& dv,int r, int c, bool gpuLoad)
         {
+            isGpu=dv.isGpu;
             rows=r;
             cols=c;
             if (dv.isGpu)
@@ -280,6 +281,7 @@ namespace ml
             }
             else
             {
+                activations=dv.activations;
                 if (gpuLoad)
                 {
                     log(2,"Matrix can't GPU load when in CPU mode");
